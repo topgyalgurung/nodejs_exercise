@@ -6,6 +6,8 @@ class MarkovMachine {
   constructor(text) {
     let words = text.split(/[ \r\n]+/);
     this.words = words.filter((c) => c !== "");
+    // array of words that start with capitalized
+    this.startWords = this.words.filter((word) => /^[A-Z]/.test(word));
     this.makeChains();
   }
 
@@ -28,6 +30,25 @@ class MarkovMachine {
       } else {
         // create a new array with an array containing next word
         this.chains[word] = [nextWord];
+      }
+    }
+  }
+
+  /** - bigrams - two words at a time */
+  makeChainsBigrams() {
+    // TODO
+    this.chains = {};
+    for (let i = 0; i < this.words.length; i++) {
+      let bigram = `${this.words[i]} ${this.words[i + 1]}`;
+      //const word = this.words[i];
+      let nextWord = this.words[i + 2] || null;
+
+      // if the word is already in the object, push nextword to its array
+      if (this.chains[bigram]) {
+        this.chains[bigram].push(nextWord);
+      } else {
+        // create a new array with an array containing next word
+        this.chains[bigram] = [];
       }
     }
   }
@@ -59,10 +80,37 @@ class MarkovMachine {
     }
     return result.join(" ");
   }
+  // improvements to be made:
+  /** - have machine start on a capitalized word
+   * - stop at a period
+
+   */
+  maxWordsImprovised(numWords = 100) {
+    let keys = Object.keys(this.chains);
+    let startKey =
+      this.startWords[Math.floor(Math.random() * this.startWords.length)]; // e.g "the"
+    const result = [];
+    // "the": ["cat", "hat"]
+    while (result.length < numWords && startKey != null) {
+      result.push(startKey); // result =["the"] /* next iter: ["the", "hat"]
+
+      const nextWords = this.chains[startKey]; // ["cat", "hat"] // null
+      startKey = nextWords[Math.floor(Math.random() * nextWords.length)]; //e.g "hat"
+
+      if (startKey === null || /[.!?]$/.test(word)) break;
+    }
+    return result.join(" ");
+  }
   /**
    * give URL, returns HTML mixed into the output text
    * find libray in NPM that strip out HTML and use it
-   * user passing multiple files and or URLs make a machine that mixes together that text
+   * user passing multiple filesclear and or URLs make a machine that mixes together that text
+   */
+
+  /**
+   * Javascript Generator functions
+   * - make a machine that generates text on demand word by word
+   * - JS has generator functions which can yield output on demand
    */
 }
 

@@ -1,0 +1,21 @@
+{
+  "name": "express-exercise",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.2",
+    "fs": "^0.0.1-security",
+    "jest-cli": "^29.7.0",
+    "moment": "^2.30.1",
+    "nodemon": "^3.1.7"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
