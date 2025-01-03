@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Shopping List</title>
+  </head>
+  <body>
+    <h1>Shopping List</h1>
+    <ul id="items"></ul>
+    <form id="addItemForm">
+      <input type="text" id="name" placeholder="Item Name" required />
+      <input type="number" id="price" placeholder="Price" required />
+      <button type="submit">Add Item</button>
+    </form>
+
+    <script>
+      const apiUrl = "/items";
+
+      // Fetch and display items
+      async function loadItems() {
+        const response = await fetch(apiUrl);
+        const items = await response.json();
+        const ul = document.getElementById("items");
+        ul.innerHTML = items
+          .map((item) => `<li>${item.name} - $${item.price}</li>`)
+          .join("");
+      }
+
+      // Add item
+      document
+        .getElementById("addItemForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const name = document.getElementById("name").value;
+          const price = document.getElementById("price").value;
+          await fetch(apiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, price: parseFloat(price) }),
+          });
+          loadItems();
+        });
+
+      loadItems();
+    </script>
+  </body>
+</html>

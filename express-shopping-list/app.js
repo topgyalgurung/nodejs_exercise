@@ -5,17 +5,21 @@
  */
 
 const express = require("express");
+const DataStore = require("./datastore");
 const ExpressError = require("./ExpressError");
+
 const items = require("./fakeDB");
 
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(express.json());
+app.use(express.static("public"));
 
 /* Routes */
 //1. GET /items
 app.get("/items", (req, res, next) => {
   try {
+    // const items = await datastore.read();
     res.json(items);
   } catch (error) {
     next(error);
@@ -31,6 +35,7 @@ app.post("/items", (req, res, next) => {
       return next(new ExpressError("Name and price are required", 400));
     }
     const newItem = { name, price };
+    // const newItem = await DataStore.addItem({ name, price });
     items.push(newItem);
     res.status(201).json({ added: newItem });
   } catch (error) {
@@ -40,6 +45,7 @@ app.post("/items", (req, res, next) => {
 
 //3. GET /items/:name
 app.get("/items/:name", (req, res, next) => {
+  // const item = await DataStore.findItem(req.params.name);
   const itemName = req.params.name;
   try {
     const item = items.find((i) => i.name === itemName);
@@ -55,6 +61,7 @@ app.get("/items/:name", (req, res, next) => {
 
 //4. PATCH /items/:name
 app.patch("/items/:name", (req, res, next) => {
+  // const updatedItem = await DataStore.updateItem(req.params.name, req.body);
   const itemName = req.params.name;
   const { name, price } = req.body;
   try {
@@ -72,6 +79,7 @@ app.patch("/items/:name", (req, res, next) => {
 
 //5. DELETE /items/:name
 app.delete("/items/:name", (req, res, next) => {
+  // const response = await DataStore.deleteItem(req.params.name);
   const itemName = req.params.name;
   try {
     const itemIndex = items.findIndex((i) => i.name === itemName);
