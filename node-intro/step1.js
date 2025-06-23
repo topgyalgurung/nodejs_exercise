@@ -1,6 +1,8 @@
 const fs = require("fs");
+const process = require('process');
+
 function cat(path) {
-  fs.readFile(path, (err, data) => {
+  fs.readFile(path, 'utf8',(err, data) => {
     if (err) {
       console.log(`Error reading ${path}: \n`, err.message);
       process.exit(1);
@@ -9,10 +11,4 @@ function cat(path) {
   });
 }
 
-// get the file path via command line
-const filePath = process.argv[2];
-if (!filePath) {
-  console.error("Please provide a file path");
-  process.exit(1);
-}
-cat(filePath);
+cat(process.argv[2]);
